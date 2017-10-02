@@ -14,5 +14,7 @@
     "nodemon": "^1.12.1",
     "standard": "^10.0.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "x-ray": "^2.3.2"
+  }
 }
