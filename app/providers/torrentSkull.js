@@ -5,5 +5,6 @@ module.exports = class TorrentSkull {
     this.limit = ''
     this.selector = ''
     this.torrents = []
+    this.isImdb = false
   }
 }
