@@ -2,10 +2,10 @@ const map = require('async/map')
 const sub = require('./providers/providers.js')
 class TorrentSearch {
   constructor () {
-    this.activeProviders = ['torrent9']
+    this.activeProviders = ['yts', 'torrent9']
     this.torrents = []
     this.params = {
-      query: 'supergirl',
+      query: 'walking dead',
       type: 'series',
       limit: 5,
       page: 0
@@ -36,7 +36,7 @@ class TorrentSearch {
       }, (err, results) => {
         let torrents = []
         if (err) reject(err)
-        results.forEach(elemt => {
+        results.filter(p => p).forEach(elemt => {
           torrents = torrents.concat(elemt)
         })
         resolve(torrents)

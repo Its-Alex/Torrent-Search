@@ -1,7 +1,7 @@
 const TorrentSkull = require('./torrentSkull.js')
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
-const async = require('async')
+const map = require('async/map')
 
 class Torrent9 extends TorrentSkull {
   constructor () {
@@ -53,7 +53,7 @@ class Torrent9 extends TorrentSkull {
         let $ = cheerio.load(res)
         var arr = Object.values($(this.selector)).splice(24, params.limit)
 
-        async.map(arr, (elem, cb) => {
+        map(arr, (elem, cb) => {
           if ($(elem).next()[0] && $(elem).next()[0].attribs && $(elem).next()[0].attribs.href.match(/^\/torrent\/[A-za-z0-9/\-.]+/)) {
             this.getMagnets(this.baseUrl + $(elem).next()[0].attribs.href).then(res => {
               cb(null, res)
