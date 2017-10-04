@@ -4,6 +4,11 @@ class TorrentSearch {
   constructor () {
     this.activeProviders = ['torrent9']
     this.torrents = []
+    this.params = {
+      query: 'supergirl s01e01',
+      type: 'series',
+      page: 0
+    }
   }
 
   setActiveProviders (providers) {
@@ -21,7 +26,7 @@ class TorrentSearch {
     return new Promise((resolve, reject) => {
       map(self.activeProviders, (elem, cb) => {
         if (sub[elem]) {
-          sub[elem].getTorrents().then(res => {
+          sub[elem].getTorrents(this.params).then(res => {
             cb(null, res)
           }).catch(err => {
             cb(err, null)

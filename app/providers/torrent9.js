@@ -9,9 +9,6 @@ class Torrent9 extends TorrentSkull {
 
     this.provider = 'torrent9'
     this.baseUrl = 'http://www.torrent9.pe'
-    this.type = 'series'
-    this.query = 'supergirl'
-    this.page = 0
     this.selector = 'i.fa-desktop,i.fa'
   }
 
@@ -42,13 +39,13 @@ class Torrent9 extends TorrentSkull {
     })
   }
 
-  getTorrents () {
+  getTorrents (params) {
     return new Promise((resolve, reject) => {
       let cat
 
-      if (this.type === 'movies') cat = '/films/'
-      if (this.type === 'series') cat = '/series/'
-      fetch(`${this.baseUrl + '/search_torrent' + cat + this.query.trim().replace(/ /, '+')}/page-${this.page}`)
+      if (params.type === 'movies') cat = '/films/'
+      if (params.type === 'series') cat = '/series/'
+      fetch(`${this.baseUrl + '/search_torrent' + cat + params.query.trim().replace(/ /, '+')}/page-${params.page}`)
       .then(res => {
         return res.text()
       })
