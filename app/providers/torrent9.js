@@ -51,7 +51,8 @@ class Torrent9 extends TorrentSkull {
       })
       .then(res => {
         let $ = cheerio.load(res)
-        var arr = Object.values($(this.selector))
+        var arr = Object.values($(this.selector)).splice(24, params.limit)
+
         async.map(arr, (elem, cb) => {
           if ($(elem).next()[0] && $(elem).next()[0].attribs && $(elem).next()[0].attribs.href.match(/^\/torrent\/[A-za-z0-9/\-.]+/)) {
             this.getMagnets(this.baseUrl + $(elem).next()[0].attribs.href).then(res => {

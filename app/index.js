@@ -5,8 +5,9 @@ class TorrentSearch {
     this.activeProviders = ['torrent9']
     this.torrents = []
     this.params = {
-      query: 'supergirl s01e01',
+      query: 'supergirl',
       type: 'series',
+      limit: 5,
       page: 0
     }
   }

@@ -17,6 +17,8 @@
   "dependencies": {
     "async": "^2.5.0",
     "cheerio": "^1.0.0-rc.2",
-    "node-fetch": "^1.7.3"
+    "node-fetch": "^1.7.3",
+    "query-string": "^5.0.0",
+    "yts-api-pt": "^2.0.0"
   }
 }
