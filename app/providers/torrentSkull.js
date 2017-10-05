@@ -6,5 +6,6 @@ module.exports = class TorrentSkull {
     this.selector = ''
     this.torrents = []
     this.isImdb = false
+    this.type = []
   }
 }

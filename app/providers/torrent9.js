@@ -10,6 +10,7 @@ class Torrent9 extends TorrentSkull {
     this.provider = 'torrent9'
     this.baseUrl = 'http://www.torrent9.pe'
     this.selector = 'i.fa-desktop,i.fa'
+    this.type = ['series', 'movies']
   }
 
   getMagnets (link) {
@@ -44,7 +45,8 @@ class Torrent9 extends TorrentSkull {
       let cat
 
       if (params.type === 'movies') cat = '/films/'
-      if (params.type === 'series') cat = '/series/'
+      else if (params.type === 'series') cat = '/series/'
+      else return reject(new Error('Unable to detect witch type is selected'))
       fetch(`${this.baseUrl + '/search_torrent' + cat + params.query.trim().replace(/ /, '+')}/page-${params.page}`)
       .then(res => {
         return res.text()

@@ -5,7 +5,10 @@ const EztvApi = require('eztv-api-pt')
 class Eztv extends TorrentSkull {
   constructor (props) {
     super(props)
+
     this.eztv = new EztvApi()
+    this.provider = 'eztv'
+    this.type = ['series']
   }
 
   getTorrents (params) {

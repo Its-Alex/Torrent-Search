@@ -4,13 +4,19 @@ const fetch = require('node-fetch')
 const each = require('async/each')
 
 class Yts extends TorrentSkull {
+  constructor (props) {
+    super(props)
+
+    this.type = ['movies', 'imdb']
+    this.provider = 'yts'
+  }
+
   getTorrents (params) {
     return new Promise((resolve, reject) => {
-      if (params.type !== 'movies') return resolve([])
       fetch('https://yts.ag/api/v2/list_movies.json?' + qs.stringify({
         limit: params.limit,
         page: params.page,
-        query_term: params.query,
+        query_term: params.imdbId || params.query,
         sort_by: 'seeds'
       }))
       .then(res => {
