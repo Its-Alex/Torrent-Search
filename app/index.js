@@ -5,7 +5,7 @@ const sub = require('./providers/providers.js')
 
 class TorrentSearch {
   constructor () {
-    this.activeProviders = ['yts', 'torrent9']
+    this.activeProviders = ['eztv']
     this.torrents = []
     this.params = {
       imdbId: null,
@@ -43,6 +43,7 @@ class TorrentSearch {
           }
         }, (err, results) => {
           let torrents = []
+
           if (err) reject(err)
           results.filter(p => p).forEach(elemt => {
             torrents = torrents.concat(elemt)
@@ -70,7 +71,7 @@ class TorrentSearch {
 }
 
 let t = new TorrentSearch()
-t.getTorrents('tt1431045', 'imdb').then(res => {
+t.getTorrents('tt4488724', 'imdb').then(res => {
   console.log(res)
 }).catch(err => {
   console.log(err)
