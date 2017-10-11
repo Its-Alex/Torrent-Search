@@ -5,7 +5,7 @@ const sub = require('./providers/providers.js')
 
 class TorrentSearch {
   constructor () {
-    this.activeProviders = ['eztv']
+    this.activeProviders = ['eztv', 'yts', 'torrent9']
     this.torrents = []
     this.params = {
       imdbId: null,
@@ -69,12 +69,5 @@ class TorrentSearch {
     })
   }
 }
-
-let t = new TorrentSearch()
-t.getTorrents('tt4488724', 'imdb').then(res => {
-  console.log(res)
-}).catch(err => {
-  console.log(err)
-})
 
 module.exports = TorrentSearch
