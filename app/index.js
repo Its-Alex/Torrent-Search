@@ -5,7 +5,7 @@ const sub = require('./providers/providers.js')
 
 class TorrentSearch {
   constructor () {
-    this.activeProviders = ['eztv', 'yts', 'torrent9']
+    this.activeProviders = ['rarbg', 'yts']
     this.torrents = []
     this.params = {
       imdbId: null,
@@ -18,10 +18,12 @@ class TorrentSearch {
   }
 
   setActiveProviders (providers) {
-    providers.forEach(elemt => {
-      if (elemt === 'torrent9') this.activeProviders.push(elemt)
-      if (elemt === 'yts') this.activeProviders.push(elemt)
-      if (elemt === 'eztv') this.activeProviders.push(elemt)
+    providers.forEach(elmt => {
+      if (elmt === 'torrent9') this.activeProviders.push(elmt)
+      // if (elmt === 'eztv') this.activeProviders.push(elmt)
+      if (elmt === 'rarbg') this.activeProviders.push(elmt)
+      if (elmt === 'yts') this.activeProviders.push(elmt)
+      // if (elmt === '1337x') this.activeProviders.push(elmt)
     })
   }
 
@@ -29,45 +31,78 @@ class TorrentSearch {
     return this.activeProviders
   }
 
-  getTorrents (id = this.params.query, type = this.params.type) {
+  getTorrents (imdb = this.params.imdb, name = this.params.query, type = this.params.type, opts = null) {
     return new Promise((resolve, reject) => {
-      this.parseArgs(id, type).then(res => {
+      this.parseArgs(imdb, name, type, opts).then(res => {
         map(this.activeProviders, (elem, cb) => {
           if (sub[elem]) {
-            if (sub[elem].type.indexOf(type) === -1) return cb(null, [])
-            sub[elem].getTorrents(this.params).then(res => {
-              cb(null, res)
-            }).catch(err => {
-              cb(err, null)
-            })
+            // Cancel search if provider is not set for this query
+            if (sub[elem].type.indexOf(type) === -1) cb(null, [])
+
+            if (imdb && sub[elem].supportImdb) {
+              sub[elem].getTorrents(this.params).then(res => {
+                if (res.length !== 0) {
+                  cb(null, {
+                    priority: sub[elem].priority,
+                    torrents: res
+                  })
+                } else cb(null, [])
+              }).catch(err => {
+                cb(err, null)
+              })
+            } else if (name && sub[elem].supportQuery) {
+              if (sub[elem].type.indexOf(type) === -1) return cb(null, [])
+              sub[elem].getTorrents(this.params).then(res => {
+                if (res.length !== 0) {
+                  cb(null, {
+                    priority: sub[elem].priority,
+                    torrents: res
+                  })
+                } else cb(null, [])
+              }).catch(err => {
+                cb(err, null)
+              })
+            }
           }
         }, (err, results) => {
-          let torrents = []
+          this.torrents = []
 
           if (err) reject(err)
-          results.filter(p => p).forEach(elemt => {
-            torrents = torrents.concat(elemt)
+          results.filter(p => p).forEach(elmt => {
+            this.torrents.push(elmt)
           })
-          resolve(torrents)
+          resolve(this.sortTorrents())
         })
       }).catch(err => reject(err))
     })
   }
 
-  parseArgs (id, type) {
+  sortTorrents () {
+    return this.torrents
+  }
+
+  parseArgs (imdb, name, type, opts) {
     return new Promise((resolve, reject) => {
-      if (type !== 'series' && type !== 'movies' && type !== 'imdb') return reject(new Error('Bad type!'))
+      if (type !== 'series' && type !== 'movies') return reject(new Error('Bad type!'))
       this.params.type = type
-      if (id.match(/^(tt|nm|ch|co|ev|ni)-{0,1}([0-9]{2,7})$/) && type === 'imdb') {
-        this.params.imdbId = id
-        this.params.query = null
-      } else {
-        this.params.imdbId = null
-        this.params.query = id
+      this.params.imdbId = imdb
+      this.params.query = name
+      if (opts) {
+        if (opts.limit) this.params.limit = opts.limit
+        if (opts.page) this.params.page = opts.page
+        if (typeof opts.lang === 'string') this.params.lang = opts.lang
       }
       resolve()
     })
   }
 }
+
+let t = new TorrentSearch()
+t.getTorrents('tt1431045', null, 'movies').then(res => {
+  console.log(res[0])
+  console.log(res[1])
+}).catch(err => {
+  console.log(err)
+})
 
 module.exports = TorrentSearch

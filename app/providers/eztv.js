@@ -12,6 +12,7 @@ class Eztv extends TorrentSkull {
 
   getTorrents (params) {
     return new Promise((resolve, reject) => {
+      console.log(params)
       fetch('https://eztv.ag/api/get-torrents?imdb_id=' + params.imdbId.slice(2))
       .then(res => {
         return res.json()
@@ -19,7 +20,7 @@ class Eztv extends TorrentSkull {
         let torrents = []
         let limit = 0
 
-        if (res.torrents_count > 20000 || res.torrents_count === 0) {
+        if (res.torrents_count < 20000 || res.torrents_count === 0) {
           return resolve(torrents)
         }
         each(res.torrents, (elmt, cb) => {

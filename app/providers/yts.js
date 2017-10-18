@@ -7,8 +7,11 @@ class Yts extends TorrentSkull {
   constructor (props) {
     super(props)
 
-    this.type = ['movies', 'imdb']
     this.provider = 'yts'
+    this.priority = 0
+    this.type = ['movies']
+    this.supportImdb = true
+    this.supportQuery = true
   }
 
   getTorrents (params) {

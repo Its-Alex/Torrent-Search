@@ -11,6 +11,7 @@ class Torrent9 extends TorrentSkull {
     this.baseUrl = 'http://www.torrent9.pe'
     this.selector = 'i.fa-desktop,i.fa'
     this.type = ['series', 'movies']
+    this.priority = 10
   }
 
   getMagnets (link) {
