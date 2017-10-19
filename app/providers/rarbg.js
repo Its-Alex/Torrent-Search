@@ -28,7 +28,10 @@ class Yts extends TorrentSkull {
       }
       if (!params.imdbId) delete conf.search_imdb
       rarbg.search(conf).then(res => {
+        if (res.length === 0) return resolve([])
+
         let torrents = []
+
         each(res, (elmt, callback) => {
           let obj = {
             magnet: elmt.download,
@@ -41,7 +44,7 @@ class Yts extends TorrentSkull {
           resolve(torrents)
         })
       }).catch(err => {
-        // if (err) console.log(err)
+        if (err) console.log(err)
         resolve([])
       })
     })

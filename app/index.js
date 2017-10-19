@@ -5,7 +5,7 @@ const sub = require('./providers/providers.js')
 
 class TorrentSearch {
   constructor () {
-    this.activeProviders = ['rarbg', 'yts']
+    this.activeProviders = ['yts', 'rarbg']
     this.torrents = []
     this.params = {
       imdbId: null,
@@ -40,7 +40,7 @@ class TorrentSearch {
             if (sub[elem].type.indexOf(type) === -1) return cb(null, [])
 
             if (imdb && sub[elem].supportImdb) {
-              return sub[elem].getTorrents(this.params)
+              sub[elem].getTorrents(this.params)
               .then(res => {
                 if (res.length !== 0) {
                   cb(null, {
@@ -48,22 +48,22 @@ class TorrentSearch {
                     torrents: res
                   })
                 } else {
-                  if (elem !== 'rarbg') cb(null, [])
+                  if (elem !== 'rarbg') cb(null, {})
                 }
               })
               .catch(err => {
-                if (elem === 'rarbg') cb(null, [])
+                if (elem === 'rarbg') return cb(null, {})
                 cb(err, null)
               })
             } else if (name && sub[elem].supportQuery) {
-              return sub[elem].getTorrents(this.params).then(res => {
+              sub[elem].getTorrents(this.params).then(res => {
                 if (res.length !== 0) {
                   cb(null, {
                     priority: sub[elem].priority,
                     torrents: res
                   })
                 } else {
-                  cb(null, [])
+                  cb(null, {})
                 }
               }).catch(err => {
                 cb(err, null)
@@ -85,11 +85,13 @@ class TorrentSearch {
 
   sortTorrents () {
     let finalArray = []
-    this.torrents.sort((first, second) => {
+    this.torrents
+    .sort((first, second) => {
       if (first.priority < second.priority) return -1
       if (first.priority > second.priority) return 1
       if (first.priority === second.priority) return 0
-    }).map((elmt, index) => {
+    })
+    .map((elmt, index) => {
       elmt.torrents.map(elmtChild => {
         if (elmtChild.quality && elmtChild.magnet) finalArray = finalArray.concat(elmtChild)
       })
@@ -113,5 +115,16 @@ class TorrentSearch {
     })
   }
 }
+
+let t = new TorrentSearch()
+t.getTorrents('tt4125', null, 'movies')
+.then(res => {
+  console.log('SALUT 1')
+  console.log(res)
+})
+.catch(err => {
+  console.log('SALUT 2')
+  console.log(err)
+})
 
 module.exports = TorrentSearch
