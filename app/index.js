@@ -93,7 +93,6 @@ class TorrentSearch {
 
   parseArgs (imdb, name, type, opts) {
     return new Promise((resolve, reject) => {
-      console.log(type)
       if (type !== 'series' && type !== 'movies') return reject(new Error('Bad type!'))
       this.params.type = type
       this.params.imdbId = imdb
