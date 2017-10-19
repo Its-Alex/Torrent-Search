@@ -78,7 +78,17 @@ class TorrentSearch {
   }
 
   sortTorrents () {
-    return this.torrents
+    let finalArray = []
+    this.torrents.sort((first, second) => {
+      if (first.priority < second.priority) return -1
+      if (first.priority > second.priority) return 1
+      if (first.priority === second.priority) return 0
+    }).map((elmt, index) => {
+      elmt.torrents.map(elmtChild => {
+        if (elmtChild.quality && elmtChild.magnet) finalArray = finalArray.concat(elmtChild)
+      })
+    })
+    return finalArray
   }
 
   parseArgs (imdb, name, type, opts) {
@@ -96,13 +106,5 @@ class TorrentSearch {
     })
   }
 }
-
-let t = new TorrentSearch()
-t.getTorrents('tt1431045', null, 'movies').then(res => {
-  console.log(res[0])
-  console.log(res[1])
-}).catch(err => {
-  console.log(err)
-})
 
 module.exports = TorrentSearch
