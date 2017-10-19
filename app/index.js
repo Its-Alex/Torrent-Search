@@ -37,28 +37,34 @@ class TorrentSearch {
         map(this.activeProviders, (elem, cb) => {
           if (sub[elem]) {
             // Cancel search if provider is not set for this query
-            if (sub[elem].type.indexOf(type) === -1) cb(null, [])
+            if (sub[elem].type.indexOf(type) === -1) return cb(null, [])
 
             if (imdb && sub[elem].supportImdb) {
-              sub[elem].getTorrents(this.params).then(res => {
+              return sub[elem].getTorrents(this.params)
+              .then(res => {
                 if (res.length !== 0) {
                   cb(null, {
                     priority: sub[elem].priority,
                     torrents: res
                   })
-                } else cb(null, [])
-              }).catch(err => {
+                } else {
+                  if (elem !== 'rarbg') cb(null, [])
+                }
+              })
+              .catch(err => {
+                if (elem === 'rarbg') cb(null, [])
                 cb(err, null)
               })
             } else if (name && sub[elem].supportQuery) {
-              if (sub[elem].type.indexOf(type) === -1) return cb(null, [])
-              sub[elem].getTorrents(this.params).then(res => {
+              return sub[elem].getTorrents(this.params).then(res => {
                 if (res.length !== 0) {
                   cb(null, {
                     priority: sub[elem].priority,
                     torrents: res
                   })
-                } else cb(null, [])
+                } else {
+                  cb(null, [])
+                }
               }).catch(err => {
                 cb(err, null)
               })
@@ -94,6 +100,7 @@ class TorrentSearch {
   parseArgs (imdb, name, type, opts) {
     return new Promise((resolve, reject) => {
       if (type !== 'series' && type !== 'movies') return reject(new Error('Bad type!'))
+      if (!imdb && !name) return reject(new Error('No query!'))
       this.params.type = type
       this.params.imdbId = imdb
       this.params.query = name

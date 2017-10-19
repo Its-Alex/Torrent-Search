@@ -8,8 +8,11 @@ class Yts extends TorrentSkull {
     super(props)
 
     this.provider = 'rarbg'
+
     this.priority = 2
+
     this.type = ['movies', 'series']
+
     this.supportImdb = true
     this.supportQuery = true
   }
@@ -26,19 +29,19 @@ class Yts extends TorrentSkull {
       if (!params.imdbId) delete conf.search_imdb
       rarbg.search(conf).then(res => {
         let torrents = []
-        each(res, (elmt, cb) => {
+        each(res, (elmt, callback) => {
           let obj = {
             magnet: elmt.download,
             quality: (elmt.category) ? elmt.category.split('/')[2] : null
           }
           torrents.push(obj)
-          cb()
+          callback()
         }, err => {
-          if (err) reject(err)
+          if (err) console.log(err)
           resolve(torrents)
         })
       }).catch(err => {
-        console.log(err)
+        // if (err) console.log(err)
         resolve([])
       })
     })
