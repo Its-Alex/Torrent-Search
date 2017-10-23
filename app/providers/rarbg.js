@@ -101,7 +101,7 @@ class RarbgApi {
         return setTimeout(() => {
           return this.sendRequest(query).then(({ torrent_results }) => {
             if (!torrent_results) { // eslint-disable-line camelcase
-              return resolve(new Error('No results found!'))
+              return resolve([])
             }
 
             return resolve(torrent_results)
