@@ -1,5 +1,6 @@
 const map = require('async/map')
 const sub = require('./providers/providers.js')
+const debug = require('debug')('search')
 
 // const config = JSON.parse(require('fs').readFileSync(require('path').resolve(require('path').dirname(__dirname), '.config.json'), 'UTF-8'))
 
@@ -19,11 +20,8 @@ class TorrentSearch {
 
   setActiveProviders (providers) {
     providers.forEach(elmt => {
-      if (elmt === 'torrent9') this.activeProviders.push(elmt)
-      // if (elmt === 'eztv') this.activeProviders.push(elmt)
       if (elmt === 'rarbg') this.activeProviders.push(elmt)
       if (elmt === 'yts') this.activeProviders.push(elmt)
-      // if (elmt === '1337x') this.activeProviders.push(elmt)
     })
   }
 
@@ -48,11 +46,11 @@ class TorrentSearch {
                     torrents: res
                   })
                 } else {
-                  if (elem !== 'rarbg') cb(null, {})
+                  cb(null, {})
                 }
               })
               .catch(err => {
-                if (elem === 'rarbg') return cb(null, {})
+                console.log(err)
                 cb(err, null)
               })
             } else if (name && sub[elem].supportQuery) {
@@ -66,6 +64,7 @@ class TorrentSearch {
                   cb(null, {})
                 }
               }).catch(err => {
+                console.log(err)
                 cb(err, null)
               })
             }
@@ -85,16 +84,26 @@ class TorrentSearch {
 
   sortTorrents () {
     let finalArray = []
+
+    if (this.torrents[0].length === 0) return finalArray
+
     this.torrents
     .sort((first, second) => {
       if (first.priority < second.priority) return -1
       if (first.priority > second.priority) return 1
       if (first.priority === second.priority) return 0
-    })
-    .map((elmt, index) => {
-      elmt.torrents.map(elmtChild => {
-        if (elmtChild.quality && elmtChild.magnet) finalArray = finalArray.concat(elmtChild)
-      })
+    }).map(elem => {
+      if (elem.torrents && elem.torrents.length !== 0) {
+        elem.torrents.map(elmt => {
+          if (elmt.quality === '1080') elmt.quality = '1080p'
+          if (elmt.quality === '720') elmt.quality = '720p'
+          if (elmt.quality === '480') elmt.quality = '480p'
+          if (elmt.quality === '360') elmt.quality = '360p'
+          if (elmt.quality === '240') elmt.quality = '240p'
+
+          if (elmt.quality) finalArray.push(elmt)
+        })
+      }
     })
     return finalArray
   }
@@ -116,15 +125,19 @@ class TorrentSearch {
   }
 }
 
-let t = new TorrentSearch()
-t.getTorrents('tt4125', null, 'movies')
-.then(res => {
-  console.log('SALUT 1')
-  console.log(res)
-})
-.catch(err => {
-  console.log('SALUT 2')
-  console.log(err)
-})
+if (debug.enabled) {
+  let t = new TorrentSearch()
+  t.getTorrents(null, 'deadpool', 'movies')
+  .then(res => {
+    console.log(res)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+
+  process.on('unhandledRejection', (reason, p) => {
+    console.log('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason)
+  })
+}
 
 module.exports = TorrentSearch
