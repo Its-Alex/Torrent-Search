@@ -23,9 +23,16 @@ class Yts extends TorrentSkull {
         sort_by: 'seeds'
       }))
       .then(res => {
-        return res.json()
+        let json
+        try {
+          json = res.json()
+        } catch (error) {
+          json = null
+        }
+        return json
       })
       .then(res => {
+        if (res === null) return resolve([])
         let limit = 0
 
         if (res.data.movie_count === 0) return resolve([])
@@ -49,7 +56,10 @@ class Yts extends TorrentSkull {
         })
         resolve(torrents)
       })
-      .catch(err => reject(err))
+      .catch(err => {
+        // console.log(err)
+        resolve([])
+      })
     })
   }
 }

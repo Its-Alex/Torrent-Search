@@ -85,7 +85,11 @@ class TorrentSearch {
   sortTorrents () {
     let finalArray = []
 
-    if (!Array.isArray(this.torrents) || this.torrents[0].length === 0) return finalArray
+    if (this.torrents.length !== 0) {
+      if (!Array.isArray(this.torrents) || this.torrents[0].length === 0) return finalArray
+    } else {
+      return finalArray
+    }
 
     this.torrents
     .sort((first, second) => {
@@ -127,8 +131,9 @@ class TorrentSearch {
 
 if (debug.enabled) {
   let t = new TorrentSearch()
-  t.getTorrents(null, 'deadpool', 'movies')
+  t.getTorrents('tt1396484', null, 'movies')
   .then(res => {
+    console.log('result:')
     console.log(res)
   })
   .catch(err => {
