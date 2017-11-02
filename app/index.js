@@ -85,7 +85,7 @@ class TorrentSearch {
   sortTorrents () {
     let finalArray = []
 
-    if (this.torrents[0].length === 0) return finalArray
+    if (!Array.isArray(this.torrents) || this.torrents[0].length === 0) return finalArray
 
     this.torrents
     .sort((first, second) => {
