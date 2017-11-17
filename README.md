@@ -5,7 +5,7 @@ Module to find some movies or series from torrent source
 ```shell
 npm install https://github.com/Its-Alex/torrent-search
 ```
-ou
+or
 ```shell
 yarn add https://github.com/Its-Alex/torrent-search
 ```
