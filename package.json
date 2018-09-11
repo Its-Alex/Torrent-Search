@@ -21,7 +21,7 @@
     "eztv-api-pt": "^1.3.1",
     "https": "^1.0.0",
     "moment": "^2.19.1",
-    "node-fetch": "^1.7.3",
+    "node-fetch": "^2.0.0",
     "query-string": "^5.0.0",
     "querystring": "^0.2.0",
     "xtorrent": "^0.2.2"
