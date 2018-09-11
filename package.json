@@ -11,9 +11,9 @@
     "debug": "DEBUG=search node ./app/index.js"
   },
   "devDependencies": {
-    "nodemon": "^1.12.1",
-    "debug": "^3.1.0",
-    "standard": "^10.0.3"
+    "nodemon": "1.12.1",
+    "debug": "3.1.0",
+    "standard": "10.0.3"
   },
   "dependencies": {
     "async": "^2.5.0",
